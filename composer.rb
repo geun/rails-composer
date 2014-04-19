@@ -967,7 +967,7 @@ say_recipe 'gems'
 ### GEMFILE ###
 
 ## Ruby on Rails
-# insert_into_file('Gemfile', "ruby '#{RUBY_VERSION}', :engine => 'jruby', :engine_version => '1.7.11'\n", :before => /^ *gem 'rails'/, :force => false)
+insert_into_file('Gemfile', "ruby '#{RUBY_VERSION}', :engine => 'jruby', :engine_version => '1.7.11'\n", :before => /^ *gem 'rails'/, :force => false)
 
 ## Cleanup
 # remove the 'sdoc' gem
@@ -1017,12 +1017,12 @@ add_gem 'activerecord-jdbcmysql-adapter', platform: :jruby if prefer :database, 
 ## Template Engine
 if prefer :templates, 'haml'
   add_gem 'haml-rails'
-  add_gem 'html2haml', '~> 2.0.0', :group => :development
+  add_gem 'html2haml', github: 'haml/html2haml', :group => :development
 end
 if prefer :templates, 'slim'
   add_gem 'slim-rails'
   add_gem 'haml2slim', :group => :development
-  add_gem 'html2haml', '~> 2.0.0', :group => :development
+  add_gem 'html2haml', github: 'haml/html2haml', :group => :development
 end
 
 ## Testing Framework
