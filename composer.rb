@@ -1009,20 +1009,20 @@ if rails_4?
 else
   add_gem 'mongoid' if prefer :orm, 'mongoid'
 end
-gsub_file 'Gemfile', /gem 'pg'.*/, ''
-add_gem 'pg' if prefer :database, 'postgresql'
-gsub_file 'Gemfile', /gem 'mysql2'.*/, ''
-add_gem 'mysql2' if prefer :database, 'mysql'
+gsub_file 'Gemfile', /gem 'activerecord-jdbcpostgresql-adapter'.*/, ''
+add_gem 'activerecord-jdbcpostgresql-adapter', platform: :jruby if prefer :database, 'postgresql'
+gsub_file 'Gemfile', /gem 'activerecord-jdbcmysql-adapter'.*/, ''
+add_gem 'activerecord-jdbcmysql-adapter', platform: :jruby if prefer :database, 'mysql'
 
 ## Template Engine
 if prefer :templates, 'haml'
   add_gem 'haml-rails'
-  add_gem 'html2haml', :group => :development
+  add_gem 'html2haml', '~> 2.0.0', :group => :development
 end
 if prefer :templates, 'slim'
   add_gem 'slim-rails'
   add_gem 'haml2slim', :group => :development
-  add_gem 'html2haml', :group => :development
+  add_gem 'html2haml', '~> 2.0.0', :group => :development
 end
 
 ## Testing Framework
