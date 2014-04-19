@@ -967,7 +967,7 @@ say_recipe 'gems'
 ### GEMFILE ###
 
 ## Ruby on Rails
-insert_into_file('Gemfile', "ruby '#{RUBY_VERSION}' :engine => 'jruby'\n", :before => /^ *gem 'rails'/, :force => false)
+insert_into_file('Gemfile', "ruby '#{RUBY_VERSION}', engine: :jruby\n", :before => /^ *gem 'rails'/, :force => false)
 
 ## Cleanup
 # remove the 'sdoc' gem
