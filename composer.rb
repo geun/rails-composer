@@ -210,7 +210,7 @@ end
 def html_to_haml(source)
   begin
     html = open(source) {|input| input.binmode.read }
-    Haml::HTML.new(html, :erb => true, :xhtml => true).render
+    Html2haml::HTML.new(html, :erb => true, :xhtml => true).render
   rescue RubyParser::SyntaxError
     say_wizard "Ignoring RubyParser::SyntaxError"
     # special case to accommodate https://github.com/RailsApps/rails-composer/issues/55
@@ -219,7 +219,7 @@ def html_to_haml(source)
     say_wizard "applying patch" if html.include? 'card_year'
     html = html.gsub(/, {add_month_numbers: true}, {name: nil, id: "card_month"}/, '')
     html = html.gsub(/, {start_year: Date\.today\.year, end_year: Date\.today\.year\+10}, {name: nil, id: "card_year"}/, '')
-    result = Haml::HTML.new(html, :erb => true, :xhtml => true).render
+    result = Html2haml::HTML.new(html, :erb => true, :xhtml => true).render
     result = result.gsub(/select_month nil/, "select_month nil, {add_month_numbers: true}, {name: nil, id: \"card_month\"}")
     result = result.gsub(/select_year nil/, "select_year nil, {start_year: Date.today.year, end_year: Date.today.year+10}, {name: nil, id: \"card_year\"}")
   end
@@ -227,7 +227,7 @@ end
 
 def html_to_slim(source)
   html = open(source) {|input| input.binmode.read }
-  haml = Haml::HTML.new(html, :erb => true, :xhtml => true).render
+  haml = Html2haml::HTML.new(html, :erb => true, :xhtml => true).render
   Haml2Slim.convert!(haml)
 end
 
@@ -1002,7 +1002,7 @@ end
 
 ## Database Adapter
 unless prefer :database, 'default'
-  gsub_file 'Gemfile', /gem 'sqlite3'\n/, '' unless prefer :database, 'sqlite'
+  gsub_file 'Gemfile', /gem 'activerecord-jdbcsqlite3-adapter'\n/, '' unless prefer :database, 'sqlite'
 end
 if rails_4?
   add_gem 'mongoid', github: 'mongoid/mongoid' if prefer :orm, 'mongoid'
@@ -1016,13 +1016,13 @@ add_gem 'activerecord-jdbcmysql-adapter', platform: :jruby if prefer :database, 
 
 ## Template Engine
 if prefer :templates, 'haml'
-  add_gem 'haml-rails'
-  add_gem 'html2haml', github: 'haml/html2haml', :group => :development
+  add_gem 'haml-rails', github: 'indirect/haml-rails'
+  add_gem 'html2haml', '~> 2.0.0.beta.1'
 end
 if prefer :templates, 'slim'
   add_gem 'slim-rails'
   add_gem 'haml2slim', :group => :development
-  add_gem 'html2haml', github: 'haml/html2haml', :group => :development
+  add_gem 'html2haml', '~> 2.0.0.beta.1'
 end
 
 ## Testing Framework
@@ -1070,7 +1070,7 @@ case prefs[:frontend]
   when 'bootstrap2'
     add_gem 'bootstrap-sass', '~> 2.3.2.2'
   when 'bootstrap3'
-    add_gem 'bootstrap-sass'
+    add_gem 'bootstrap-sass', '~> 3.1.1.1'
   when 'foundation4'
     if rails_4?
       add_gem 'zurb-foundation', '~> 4.3.2'
@@ -1107,7 +1107,7 @@ end
 add_gem 'pundit' if prefer :authorization, 'pundit'
 
 ## Form Builder
-add_gem 'simple_form' if prefer :form_builder, 'simple_form'
+add_gem 'simple_form', '~> 3.1.0.rc1' if prefer :form_builder, 'simple_form'
 
 ## Membership App
 if prefer :railsapps, 'rails-stripe-membership-saas'
@@ -3185,6 +3185,7 @@ say_wizard "Running 'after bundler' callbacks."
 if prefer :templates, 'haml'
   say_wizard "importing html2haml conversion tool"
   require 'html2haml'
+
 end
 if prefer :templates, 'slim'
 say_wizard "importing html2haml and haml2slim conversion tools"
