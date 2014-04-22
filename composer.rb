@@ -1010,7 +1010,7 @@ else
   add_gem 'mongoid' if prefer :orm, 'mongoid'
 end
 gsub_file 'Gemfile', /gem 'activerecord-jdbcpostgresql-adapter'.*/, ''
-add_gem 'activerecord-jdbcpostgresql-adapter', platform: :jruby if prefer :database, 'postgresql'
+add_gem 'activerecord-jdbcpostgresql-adapter', '~> 1.3.7', platform: :jruby if prefer :database, 'postgresql'
 gsub_file 'Gemfile', /gem 'activerecord-jdbcmysql-adapter'.*/, ''
 add_gem 'activerecord-jdbcmysql-adapter', platform: :jruby if prefer :database, 'mysql'
 
